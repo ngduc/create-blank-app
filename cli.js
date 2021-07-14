@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
+const prompts = require('prompts');
 const packageJson = require('./package.json');
 const path = require('path');
 const __filename = fileURLToPath(import.meta.url);
@@ -103,6 +104,28 @@ async function init() {
   // console.log(`\nDone. Now run:\n$ cd ${name}/web\n$ yarn`);
 }
 
-init().catch((e) => {
-  console.error(e);
-});
+(async () => {
+  const [appName, ...searchKeys] = cli.input;
+  console.log('Keywords', searchKeys);
+
+  const matches = match(appName, searchKeys);
+  const choices = matches.map((item) => {
+    // console.log(item.command);
+    return { title: item.command, value: item.command };
+  });
+
+  const response = await prompts([
+    {
+      type: 'select',
+      name: 'command',
+      message: 'Matched commands:',
+      choices
+    }
+  ]);
+  // console.log('Selected:', response);
+  // => { twitter: 'terkelg', color: [ '#ff0000', '#0000ff' ] }
+
+  // init().catch((e) => {
+  //   console.error(e);
+  // });
+})();
