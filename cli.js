@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import meow from 'meow';
-import { match } from './utils.js';
 import { existsSync, mkdirSync, readdirSync, writeFileSync, statSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
+const { match } = require('./utils.cjs');
 const packageJson = require('./package.json');
 const path = require('path');
 const __filename = fileURLToPath(import.meta.url);
