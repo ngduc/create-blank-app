@@ -45,7 +45,7 @@ commandArr.forEach((item) => {
 });
 // console.log('commandArr', commandArr);
 
-function getScore(search, cmdItem) {
+export function getScore(search, cmdItem) {
   let score = 0;
   for (let idx = 0; idx < cmdItem.allKeywords.length; idx++) {
     const kw = cmdItem.allKeywords[idx];
@@ -57,7 +57,7 @@ function getScore(search, cmdItem) {
   return score;
 }
 
-function match(appName, searchKeys) {
+export function match(appName, searchKeys) {
   const matches = [];
   // const searchKeys = search.split(' ');
   for (const cmdItem of commandArr) {
@@ -74,8 +74,3 @@ function match(appName, searchKeys) {
   });
   return matches;
 }
-
-module.exports = {
-  getScore,
-  match
-};
