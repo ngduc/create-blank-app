@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import meow from 'meow';
+import { match } from './utils.js';
 import { existsSync, mkdirSync, readdirSync, writeFileSync, statSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -10,10 +11,10 @@ const path = require('path');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const renameFiles = {
-  _gitignore: '.gitignore',
-  'web/_gitignore': 'web/.gitignore'
-};
+// const renameFiles = {
+//   _gitignore: '.gitignore',
+//   'web/_gitignore': 'web/.gitignore'
+// };
 
 function copy(src, dest) {
   const stat = statSync(src);
@@ -36,13 +37,13 @@ function copyDir(srcDir, destDir) {
 const cli = meow(
   `
 	Usage
-	  $ create-web3js-app <name>
+	  $ create-blank-app <name> <search keywords>
 
 	Options
 	  --postfix  Lorem ipsum  [Default: rainbows]
 
 	Examples
-	  $ create-web3js-app my-app
+	  $ create-blank-app myapp vite react ts
 `,
   {
     flags: {
@@ -57,43 +58,49 @@ const cli = meow(
 console.log(`Version: ${packageJson.version}`);
 
 async function init() {
-  const [name] = cli.input;
+  const [appName, ...searchKeys] = cli.input;
+  console.log('Keywords', searchKeys);
 
-  if (!name) {
-    console.log('ERROR: missing project name.');
-    process.exit(1);
-  }
-  if (existsSync(name)) {
-    console.log('ERROR: directory already exists.');
-    process.exit(1);
-  }
-  console.log(`Creating web3 app "${name}"`);
-  // console.log(name || 'unicorns', cli.flags);
+  const matches = match(appName, searchKeys);
+  matches.map((item) => {
+    console.log(item.command);
+  });
 
-  mkdirSync(name);
+  // if (!name) {
+  //   console.log('ERROR: missing project name.');
+  //   process.exit(1);
+  // }
+  // if (existsSync(name)) {
+  //   console.log('ERROR: directory already exists.');
+  //   process.exit(1);
+  // }
+  // console.log(`Creating web3 app "${name}"`);
+  // // console.log(name || 'unicorns', cli.flags);
 
-  const template = 'vite-web3-react-ts';
-  const templateDir = path.join(__dirname, `template-${template}`);
+  // mkdirSync(name);
 
-  const write = (root, file, content) => {
-    const targetPath = renameFiles[file] ? path.join(root, renameFiles[file]) : path.join(root, file);
-    if (content) {
-      writeFileSync(targetPath, content);
-    } else {
-      copy(path.join(templateDir, file), targetPath);
-    }
-  };
+  // const template = 'vite-web3-react-ts';
+  // const templateDir = path.join(__dirname, `template-${template}`);
 
-  const files = readdirSync(templateDir);
-  for (const file of files.filter((f) => f !== 'package.json')) {
-    write(name, file);
-  }
+  // const write = (root, file, content) => {
+  //   const targetPath = renameFiles[file] ? path.join(root, renameFiles[file]) : path.join(root, file);
+  //   if (content) {
+  //     writeFileSync(targetPath, content);
+  //   } else {
+  //     copy(path.join(templateDir, file), targetPath);
+  //   }
+  // };
 
-  const pkg = require(path.join(templateDir, `web/package.json`));
-  pkg.name = name;
-  write(name, 'web/package.json', JSON.stringify(pkg, null, 2));
+  // const files = readdirSync(templateDir);
+  // for (const file of files.filter((f) => f !== 'package.json')) {
+  //   write(name, file);
+  // }
 
-  console.log(`\nDone. Now run:\n$ cd ${name}/web\n$ yarn`);
+  // const pkg = require(path.join(templateDir, `web/package.json`));
+  // pkg.name = name;
+  // write(name, 'web/package.json', JSON.stringify(pkg, null, 2));
+
+  // console.log(`\nDone. Now run:\n$ cd ${name}/web\n$ yarn`);
 }
 
 init().catch((e) => {
