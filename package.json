@@ -1,6 +1,6 @@
 {
   "name": "create-blank-app",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "create-blank-app command-line tool.",
   "license": "MIT",
   "repository": "https://github.com/coddx-hq/create-blank-app",
@@ -29,6 +29,7 @@
     "boilerplate"
   ],
   "dependencies": {
+    "cli-color": "^2.0.0",
     "meow": "^9.0.0",
     "prompts": "^2.4.1",
     "rimraf": "^3.0.2"

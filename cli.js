@@ -111,7 +111,7 @@ async function init() {
   const matches = match(appName, searchKeys);
   const choices = matches.map((item) => {
     // console.log(item.command);
-    return { title: item.command, value: item.command };
+    return { title: item.colorCommand, value: item.command };
   });
 
   const response = await prompts([
@@ -122,7 +122,9 @@ async function init() {
       choices
     }
   ]);
-  // console.log('Selected:', response);
+  console.log('Command:', response.command);
+
+  return require('child_process').execSync(response.command, { stdio: 'inherit' });
   // => { twitter: 'terkelg', color: [ '#ff0000', '#0000ff' ] }
 
   // init().catch((e) => {
