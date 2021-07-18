@@ -7,7 +7,11 @@ const synonymMap = {
   angular: ['angularjs', 'ng'],
   'create-next-app': ['next', 'nextjs', 'cna'],
   'create-react-app': ['cra'],
+  'create-react-native-app': ['crna', 'react-native', 'rn', 'native', 'expo', 'expojs'],
+  'react-native': ['rn', 'native'],
   'create-web3js-app': ['cwa'],
+  'express-generator-typescript': ['express', 'expressjs'],
+  mobile: ['phone', 'android', 'ios'],
   vite: ['vitejs'],
   preact: ['preactjs'],
   lit: ['lit-element'],
@@ -27,6 +31,12 @@ const CMD_CWA = 'npx create-web3js-app $name';
 const CMD_CWA_COLOR = `npx ${clc.yellow('create-web3js-app')} $name`;
 const CMD_VITE = 'npm init vite@latest $name -- --template';
 const CMD_VITE_COLOR = `npm init ${clc.yellow('vite')}@latest $name -- --template`;
+const CMD_EXPRESS = `npx express-generator-typescript $name`;
+const CMD_EXPRESS_COLOR = `npx ${clc.yellow('express-generator-typescript')} $name`;
+const CMD_RN = `npx react-native init $name`;
+const CMD_RN_COLOR = `npx ${clc.yellow('react-native')} init $name`;
+const CMD_CRN = `npx create-react-native-app $name`;
+const CMD_CRN_COLOR = `npx ${clc.yellow('create-react-native-app')} $name`;
 const commandArr = [
   {
     command: `${CMD_ANGULAR}`,
@@ -117,6 +127,21 @@ const commandArr = [
     command: `${CMD_CWA}`,
     colorCommand: `${CMD_CWA_COLOR}`,
     keywords: ['create-web3js-app', 'web3', 'web3js', 'hardhat', 'metamask']
+  },
+  {
+    command: `${CMD_EXPRESS}`,
+    colorCommand: `${CMD_EXPRESS_COLOR}`,
+    keywords: ['express-generator-typescript', 'typescript']
+  },
+  {
+    command: `${CMD_CRN}`,
+    colorCommand: `${CMD_CRN_COLOR}`,
+    keywords: ['create-react-native-app', 'mobile']
+  },
+  {
+    command: `${CMD_RN}`,
+    colorCommand: `${CMD_RN_COLOR}`,
+    keywords: ['react-native', 'mobile']
   }
 ];
 commandArr.forEach((item) => {
@@ -163,7 +188,7 @@ export function match(appName, searchKeys) {
   }
   matches.map((item) => {
     item.command = item.command.replace(/\$name/, appName);
-    // console.log(item.command);
+    console.log(item.command);
   });
   return matches;
 }

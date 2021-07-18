@@ -7,6 +7,7 @@ Create-Blank-App (CBA)
 ### Todo
 
 - [ ] Better error handling.
+- [ ] User's custom list of commands.
 
 ### In Progress
 
