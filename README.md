@@ -1,16 +1,19 @@
-# Create-blank-app
+# Create-Blank-App (CBA)
 
-`create-blank-app` is a command-line tool for creating a new app by searching for tech stack using keywords.
+`create-blank-app (cba)` - just one command to remember. CBA is a command-line tool for creating a new app by searching for tech stacks using keywords.
 
 Support:
-- angular, create-react-app (CRA), create-next-app (CNA), create-web3js-app.
-- vite: vue, react, preact, lit-element, svelte app.
-- typescript.
+- Angular, create-react-app (CRA), create-next-app (CNA), create-web3js-app (CWA).
+- Vite: vue, react, preact, lit-element, svelte app.
+- Typescript.
 
 ```
 Usage
-    $ create-blank-app <name> <search keywords>
+    $ create-blank-app <name> <keyword1 keyword2 etc.>
+OR:
+    $ cba <name> <keyword1 keyword2 etc.>
 
-Examples
-    $ create-blank-app myapp vite react ts
+Examples:
+    $ cba myapp vite react ts
+    $ cba myapp cra ts
 ```

@@ -129,13 +129,16 @@ commandArr.forEach((item) => {
   }
 });
 
-export function getScore(search, cmdItem, partialMatch = false) {
+export function getScore(searchKeyword, cmdItem, partialMatch = false) {
   let score = 0;
   for (let idx = 0; idx < cmdItem.allKeywords.length; idx++) {
     const kw = cmdItem.allKeywords[idx];
-    if (kw.toLowerCase() === search) {
+    if (kw.toLowerCase() === searchKeyword) {
       score = score + 1;
       score = score - idx * 0.1; // reduce score if it matches at lower index (in the case of same score).
+    } else if (partialMatch && kw.toLowerCase().indexOf(searchKeyword) >= 0) {
+      score = score + 0.9;
+      score = score - idx * 0.1;
     }
   }
   return score;
@@ -149,12 +152,18 @@ export function match(appName, searchKeys) {
     for (const searchKeyword of searchKeys) {
       totalScore += getScore(searchKeyword.toLowerCase(), cmdItem);
     }
+    if (totalScore === 0) {
+      // next, try partialMatch
+      for (const searchKeyword of searchKeys) {
+        totalScore += getScore(searchKeyword.toLowerCase(), cmdItem, true);
+      }
+    }
     matches.push({ ...cmdItem, totalScore });
     matches.sort((a, b) => b.totalScore - a.totalScore);
   }
   matches.map((item) => {
     item.command = item.command.replace(/\$name/, appName);
-    // console.log(item.command);
+    console.log(item.command);
   });
   return matches;
 }
