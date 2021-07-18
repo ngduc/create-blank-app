@@ -8,11 +8,9 @@ Support:
 - Typescript.
 
 ```
-Installation & Usage
-    $ npm install create-blank-app -g
-    $ create-blank-app <name> <keyword1 keyword2 etc.>
-OR:
-    $ cba <name> <keyword1 keyword2 etc.>
+Installation:   $ npm install create-blank-app -g
+
+Usage:          $ cba <name> <keyword1 keyword2 etc.>
 
 Examples:
     $ cba myapp vite react ts
