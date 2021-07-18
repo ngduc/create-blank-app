@@ -8,7 +8,8 @@ Support:
 - Typescript.
 
 ```
-Usage
+Installation & Usage
+    $ npm install create-blank-app -g
     $ create-blank-app <name> <keyword1 keyword2 etc.>
 OR:
     $ cba <name> <keyword1 keyword2 etc.>
@@ -17,3 +18,5 @@ Examples:
     $ cba myapp vite react ts
     $ cba myapp cra ts
 ```
+
+<img src="docs/create-blank-app.gif">
