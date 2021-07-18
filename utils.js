@@ -163,7 +163,7 @@ export function match(appName, searchKeys) {
   }
   matches.map((item) => {
     item.command = item.command.replace(/\$name/, appName);
-    console.log(item.command);
+    // console.log(item.command);
   });
   return matches;
 }
