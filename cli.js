@@ -109,10 +109,10 @@ async function init() {
 (async () => {
   const addon = cli.flags.addon;
   if (addon) {
-    console.log('cli.flags', cli.flags.addon);
-    console.log('__dirname', __dirname);
+    // console.log('cli.flags', cli.flags.addon);
+    // console.log('__dirname', __dirname);
     const addonStdout = execSync(`sh ${__dirname}/addons/${cli.flags.addon}/run.sh`);
-    console.log('addonStdout', addonStdout.toString());
+    console.log(addonStdout.toString());
     return;
   }
 
