@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
+
+const { execSync } = require('child_process');
 const prompts = require('prompts');
 const packageJson = require('./package.json');
 const path = require('path');
@@ -41,16 +43,16 @@ const cli = meow(
 	  $ create-blank-app <name> <search keywords>
 
 	Options
-	  --postfix  Lorem ipsum  [Default: rainbows]
+	  --addon  <addon-name>  run an addon script (ex: npx cba --addon tailwind-3)
 
 	Examples
 	  $ create-blank-app myapp vite react ts
 `,
   {
     flags: {
-      postfix: {
+      addon: {
         type: 'string',
-        default: 'rainbows'
+        default: ''
       }
     }
   }
@@ -105,6 +107,15 @@ async function init() {
 }
 
 (async () => {
+  const addon = cli.flags.addon;
+  if (addon) {
+    console.log('cli.flags', cli.flags.addon);
+    console.log('__dirname', __dirname);
+    const addonStdout = execSync(`sh ${__dirname}/addons/${cli.flags.addon}/run.sh`);
+    console.log('addonStdout', addonStdout.toString());
+    return;
+  }
+
   const [appName, ...searchKeys] = cli.input;
   console.log('Keywords', searchKeys);
 
