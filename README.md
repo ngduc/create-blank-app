@@ -11,11 +11,11 @@ Support:
 ```
 Installation:   $ npm install create-blank-app -g
 
-Usage:          $ npx cba <name> <keyword1 keyword2 etc.>
+Usage:          $ cba <name> <keyword1 keyword2 etc.>
 
 Examples:
-    $ npx cba myapp vite react ts
-    $ npx cba myapp cra ts
+    $ cba myapp vite react ts
+    $ cba myapp cra ts
 ```
 
 <img src="docs/create-blank-app.gif">
@@ -26,5 +26,9 @@ Examples:
 
 ```
 $ cd project
-$ npx cba --addon tailwind-3
+$ cba --addon tailwind-3
 ```
+
+- Addon List:
+  - tailwind-3
+  - react-router-6

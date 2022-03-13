@@ -44,6 +44,7 @@ const cli = meow(
 
 	Options
 	  --addon  <addon-name>  run an addon script (ex: npx cba --addon tailwind-3)
+    --add    <addon-name>  same as --addon
 
 	Examples
 	  $ create-blank-app myapp vite react ts
@@ -107,11 +108,12 @@ async function init() {
 }
 
 (async () => {
-  const addon = cli.flags.addon;
+  const addon = cli.flags.addon || cli.flags.add || '';
+  console.log('addon', addon);
   if (addon) {
     // console.log('cli.flags', cli.flags.addon);
     // console.log('__dirname', __dirname);
-    const addonStdout = execSync(`sh ${__dirname}/addons/${cli.flags.addon}/run.sh`);
+    const addonStdout = execSync(`sh ${__dirname}/addons/${addon}/run.sh`);
     console.log(addonStdout.toString());
     return;
   }
