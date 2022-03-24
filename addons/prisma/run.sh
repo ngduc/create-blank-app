@@ -38,14 +38,15 @@ FILE1="src/prismaRoutes.ts"
 echo $FILE1
 [ -f $FILE1 ] && echo \> file existed: overriding.
 cat > $FILE1 <<EOL
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 // import this file and use it: app.use('/', prismaRoutes);
 const router = express.Router();
 
-router.get('/users', async (req, res) => {
+router.get('/users', async (req: Request, res: Response) => {
   // example: create a new user:
   const newUser = await prisma.user.create({
     data: {

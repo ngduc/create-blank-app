@@ -30,7 +30,8 @@ $ cba --add tailwind
 ```
 
 - Addon List:
-  - github-action-ci
-  - tailwind
-  - react-router
-  - prisma
+  - `github-action-ci`: basic Github Action CI workflow.
+  - `nodemon`: for backend: auto reload when a file changed.
+  - `tailwind`
+  - `react-router`
+  - `prisma`: for backend: added prisma, @prisma/client and examples of tables, /users route.
