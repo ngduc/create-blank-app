@@ -109,7 +109,6 @@ async function init() {
 
 (async () => {
   const addon = cli.flags.addon || cli.flags.add || '';
-  console.log('addon', addon);
   if (addon) {
     // console.log('cli.flags', cli.flags.addon);
     // console.log('__dirname', __dirname);

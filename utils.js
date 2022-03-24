@@ -17,7 +17,7 @@ const synonymMap = {
   lit: ['lit-element'],
   react: ['reactjs'],
   typescript: ['ts', 'type'],
-  js: ['vanilla', 'vanillajs'],
+  js: ['javascript', 'vanilla', 'vanillajs'],
   vue: ['vuejs']
 };
 

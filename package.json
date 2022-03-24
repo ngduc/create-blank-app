@@ -1,6 +1,6 @@
 {
   "name": "create-blank-app",
-  "version": "0.2.6",
+  "version": "0.3.1",
   "description": "create-blank-app command-line tool.",
   "license": "MIT",
   "repository": "https://github.com/coddx-hq/create-blank-app",

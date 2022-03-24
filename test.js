@@ -1,11 +1,13 @@
 import test from 'ava';
-import execa from 'execa';
+// import execa from 'execa';
+import { execSync } from 'child_process';
 
-test('main', async (t) => {
-  t.is(true, true);
-  // const { stdout, stdin } = execa('./cli.js', ['myapp cra react']);
-  // stdout.on('data', (data) => {
-  //   stdin.write('\n');
-  //   t.is(stdout.indexOf('Version') >= 0, true);
-  // });
+test('--version', async (t) => {
+  const stdout = await execSync(`./cli.js --version`);
+  t.is(stdout.indexOf('0.') === 0, true);
+});
+
+test('--help', async (t) => {
+  const stdout = await execSync(`./cli.js --help`);
+  t.is(stdout.indexOf('Usage') >= 0, true);
 });

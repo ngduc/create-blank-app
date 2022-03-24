@@ -26,9 +26,11 @@ Examples:
 
 ```
 $ cd project
-$ cba --addon tailwind-3
+$ cba --add tailwind
 ```
 
 - Addon List:
-  - tailwind-3
-  - react-router-6
+  - github-action-ci
+  - tailwind
+  - react-router
+  - prisma
