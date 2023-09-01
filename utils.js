@@ -6,15 +6,15 @@ const clc = require('cli-color');
 const synonymMap = {
   angular: ['angularjs', 'ng'],
   'create-next-app': ['next', 'nextjs', 'cna'],
-  'create-react-app': ['cra'],
+  'create-react-app': ['createreactapp', 'cra'],
   'create-react-native-app': ['crna', 'react-native', 'rn', 'native', 'expo', 'expojs'],
-  'react-native': ['rn', 'native'],
+  'react-native': ['reactnative', 'rn', 'native'],
   'create-web3js-app': ['cwa'],
   'express-generator-typescript': ['express', 'expressjs'],
   mobile: ['phone', 'android', 'ios'],
   vite: ['vitejs'],
   preact: ['preactjs'],
-  lit: ['lit-element'],
+  lit: ['lit-element', 'litjs'],
   react: ['reactjs'],
   typescript: ['ts', 'type'],
   js: ['javascript', 'vanilla', 'vanillajs'],
@@ -35,6 +35,8 @@ const CMD_EXPRESS = `npx express-generator-typescript $name`;
 const CMD_EXPRESS_COLOR = `npx ${clc.yellow('express-generator-typescript')} $name`;
 const CMD_RN = `npx react-native init $name`;
 const CMD_RN_COLOR = `npx ${clc.yellow('react-native')} init $name`;
+const CMD_RN_TS = `npx react-native init $name --template react-native-template-typescript`;
+const CMD_RN_TS_COLOR = `npx ${clc.yellow('react-native')} init $name --template react-native-template-typescript`;
 const CMD_CRN = `npx create-react-native-app $name`;
 const CMD_CRN_COLOR = `npx ${clc.yellow('create-react-native-app')} $name`;
 const commandArr = [
@@ -142,6 +144,11 @@ const commandArr = [
     command: `${CMD_RN}`,
     colorCommand: `${CMD_RN_COLOR}`,
     keywords: ['react-native', 'mobile']
+  },
+  {
+    command: `${CMD_RN_TS}`,
+    colorCommand: `${CMD_RN_TS_COLOR}`,
+    keywords: ['react-native', 'mobile', 'typescript']
   }
 ];
 commandArr.forEach((item) => {

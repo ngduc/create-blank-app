@@ -35,3 +35,7 @@ $ cba --add tailwind
   - `tailwind`
   - `react-router`
   - `prisma`: for backend: added prisma, @prisma/client and examples of tables, /users route.
+
+### Development:
+
+- For development of CBA, see: [/docs/dev.md](/docs/dev.md)
