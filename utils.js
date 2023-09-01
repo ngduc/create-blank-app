@@ -7,7 +7,8 @@ const synonymMap = {
   angular: ['angularjs', 'ng'],
   'create-next-app': ['next', 'nextjs', 'cna'],
   'create-react-app': ['createreactapp', 'cra'],
-  'create-react-native-app': ['crna', 'react-native', 'rn', 'native', 'expo', 'expojs'],
+  'create-react-native-app': ['crna', 'react-native', 'rn', 'native'],
+  'create-expo-app': ['expo', 'ts'],
   'react-native': ['reactnative', 'rn', 'native'],
   'create-web3js-app': ['cwa'],
   'express-generator-typescript': ['express', 'expressjs'],
@@ -39,6 +40,10 @@ const CMD_RN_TS = `npx react-native init $name --template react-native-template-
 const CMD_RN_TS_COLOR = `npx ${clc.yellow('react-native')} init $name --template react-native-template-typescript`;
 const CMD_CRN = `npx create-react-native-app $name`;
 const CMD_CRN_COLOR = `npx ${clc.yellow('create-react-native-app')} $name`;
+const CMD_EXPO = `npx create-expo-app $name`;
+const CMD_EXPO_COLOR = `npx ${clc.yellow('create-expo-app')} $name`;
+const CMD_EXPO_TS = `npx create-expo-app $name -t expo-template-blank-typescript`;
+const CMD_EXPO_TS_COLOR = `npx ${clc.yellow('create-expo-app')} $name -t expo-template-blank-typescript`;
 const commandArr = [
   {
     command: `${CMD_ANGULAR}`,
@@ -149,6 +154,16 @@ const commandArr = [
     command: `${CMD_RN_TS}`,
     colorCommand: `${CMD_RN_TS_COLOR}`,
     keywords: ['react-native', 'mobile', 'typescript']
+  },
+  {
+    command: `${CMD_EXPO}`,
+    colorCommand: `${CMD_EXPO_COLOR}`,
+    keywords: ['create-expo-app', 'mobile']
+  },
+  {
+    command: `${CMD_EXPO_TS}`,
+    colorCommand: `${CMD_EXPO_TS_COLOR}`,
+    keywords: ['create-expo-app', 'mobile', 'typescript']
   }
 ];
 commandArr.forEach((item) => {
@@ -195,7 +210,7 @@ export function match(appName, searchKeys) {
   }
   matches.map((item) => {
     item.command = item.command.replace(/\$name/, appName);
-    console.log(item.command);
+    // console.log(item.command);
   });
   return matches;
 }
