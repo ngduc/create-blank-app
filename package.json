@@ -1,7 +1,7 @@
 {
   "name": "create-blank-app",
-  "version": "0.3.4",
-  "description": "create-blank-app command-line tool.",
+  "version": "0.3.5",
+  "description": "create-blank-app command-line tool to create new project from boilerplate.",
   "license": "MIT",
   "repository": "https://github.com/coddx-hq/create-blank-app",
   "author": {
@@ -26,15 +26,14 @@
   ],
   "keywords": [
     "create-blank-app",
-    "web3",
-    "web3js",
-    "boilerplate"
+    "boilerplate",
+    "cba"
   ],
   "dependencies": {
-    "cli-color": "^2.0.0",
+    "cli-color": "^2.0.3",
     "meow": "^9.0.0",
     "prompts": "^2.4.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^5.0.1"
   },
   "devDependencies": {
     "ava": "^3.15.0",
