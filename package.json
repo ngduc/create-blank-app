@@ -3,7 +3,7 @@
   "version": "0.3.5",
   "description": "create-blank-app command-line tool to create new project from boilerplate.",
   "license": "MIT",
-  "repository": "https://github.com/coddx-hq/create-blank-app",
+  "repository": "https://github.com/ngduc/create-blank-app",
   "author": {
     "name": "Duc Nguyen",
     "url": "https://github.com/ngduc"
@@ -14,7 +14,7 @@
     "cba": "cli.js"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "test": "npx rimraf testdir && ava"
