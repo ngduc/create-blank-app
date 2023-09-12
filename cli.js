@@ -19,16 +19,18 @@ const currentDir = process.cwd(); // current directory where user runs this CLI
 const cli = meow(
   `
 	Usage
-	  $ create-blank-app <name> <search keywords>
+	  $ create-blank-app <name> [search keywords]
 
 	Options
 	  --addon  <addon-name>  run an addon script (ex: npx cba --addon tailwind-3)
     --add    <addon-name>  same as --addon
-    --gpt    <project-dir> use ChatGPT 3 to create the new app from prompt (project-dir/prompt)
-    --gpt4   <project-dir> use ChatGPT 4 to create the new app from prompt (project-dir/prompt)
+
+  To use ChatGPT, create a directory, inside, write the prompt in "prompt" (or "prompt.gpt4") file.
 
 	Examples
-	  $ create-blank-app myapp vite react ts
+	  $ cba myapp vite react ts
+    $ cd myapp
+    $ cba --add tailwind
 `,
   {
     flags: {
@@ -45,13 +47,17 @@ const cli = meow(
 );
 console.log(`Version: ${packageJson.version}`);
 
+const [appName, ...searchKeys] = cli.input;
+console.log('Keywords', searchKeys);
+const isGpt4 = existsSync(`${currentDir}/${appName}/prompt.gpt4`);
+const isUsingChatGpt = isGpt4 || existsSync(`${currentDir}/${appName}/prompt`);
+
 // init ChatGPTAPI
-const gptFlag = cli.flags.gpt || cli.flags.gpt3 || cli.flags.gpt4 || '';
 let chatgpt;
 import { ChatGPTAPI } from 'chatgpt';
-if (gptFlag) {
+if (isUsingChatGpt) {
   if (process.env.OPENAI_API_KEY) {
-    const model = cli.flags.gpt4 ? 'gpt-4' : 'gpt-3.5-turbo'; // default: gpt-3.5-turbo
+    const model = isGpt4 ? 'gpt-4' : 'gpt-3.5-turbo'; // default: gpt-3.5-turbo
     console.log('ChatGPT model:', model);
     chatgpt = new ChatGPTAPI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -62,7 +68,7 @@ if (gptFlag) {
       }
     });
   } else {
-    console.log('Error: OPENAI_API_KEY environment variable not found!');
+    console.log('ERROR: OPENAI_API_KEY environment variable not found!');
     process.exit(1);
   }
 }
@@ -70,7 +76,9 @@ if (gptFlag) {
 function extractPath(str) {
   let retStr = str.trim();
   retStr = retStr.replace('File:', '');
+  retStr = retStr.replace('Filename:', '');
   retStr = retStr.replace('File path:', '');
+  retStr = retStr.replace('/root/', '/');
 
   retStr = retStr.endsWith(':') ? retStr.slice(0, -1) : retStr; // remove the last ':' (if any)
 
@@ -80,12 +88,9 @@ function extractPath(str) {
   const matches = retStr.match(/(?:\d+\.\s)?(.*)/);
   retStr = matches ? matches[1] : retStr; // e.g. "1. filename.ext" => remove "1. "
 
-  if (str.includes(' ')) {
-    retStr = str.split(' ').splice(1).join(' '); // ignore the first part
-  }
-  retStr = retStr.replace(/\*\*/g, '');
-  // const match = str.match(/(?:\d+\.\s)?(.*)/);
-  // return match ? match[1] : '';
+  // if (str.includes(' ')) {
+  //   retStr = str.split(' ').splice(1).join(' '); // ignore the first part
+  // }
   return retStr;
 }
 
@@ -142,7 +147,7 @@ async function callChatGPT(basePath, prompt) {
     res = await chatgpt.sendMessage(text, {});
     responseText += res.text;
     text = 'continue';
-    console.log('res.text', res.text);
+    console.log(res.text);
     isEOF = res?.text?.trim().endsWith('`') || res?.text?.trim().endsWith('.') || counter >= 5;
   } while (!isEOF);
 
@@ -200,9 +205,6 @@ function copyDir(srcDir, destDir) {
 }
 
 async function init() {
-  const [appName, ...searchKeys] = cli.input;
-  console.log('Keywords', searchKeys);
-
   const matches = match(appName, searchKeys);
   matches.map((item) => {
     console.log(item.command);
@@ -246,6 +248,8 @@ async function init() {
 }
 
 (async () => {
+  const [appName, ...searchKeys] = cli.input;
+
   const addon = cli.flags.addon || cli.flags.add || '';
   if (addon) {
     // console.log('cli.flags', cli.flags.addon);
@@ -254,15 +258,22 @@ async function init() {
     console.log(addonStdout.toString());
     return;
   }
-  if (gptFlag) {
-    const data = readFileSync(`${currentDir}/${gptFlag}/prompt`, { encoding: 'utf8', flag: 'r' });
-    if (chatgpt) {
-      await callChatGPT(`${currentDir}/${gptFlag}/`, data);
+  if (isUsingChatGpt) {
+    let data;
+    if (isGpt4) {
+      data = readFileSync(`${currentDir}/${appName}/prompt.gpt4`, { encoding: 'utf8', flag: 'r' });
+    } else {
+      data = readFileSync(`${currentDir}/${appName}/prompt`, { encoding: 'utf8', flag: 'r' });
+    }
+
+    if (data) {
+      await callChatGPT(`${currentDir}/${appName}/`, data);
+    } else {
+      console.log('ERROR: cannot read the prompt file!');
+      return;
     }
     return;
   }
-
-  const [appName, ...searchKeys] = cli.input;
   console.log('Keywords', searchKeys);
 
   const matches = match(appName, searchKeys);
