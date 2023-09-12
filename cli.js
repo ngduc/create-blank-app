@@ -12,7 +12,9 @@ const prompts = require('prompts');
 const packageJson = require('./package.json');
 const path = require('path');
 const __filename = fileURLToPath(import.meta.url);
+// e.g. /Users/name/.nvm/versions/node/v18.14.0/lib/node_modules/create-blank-app/
 const __dirname = path.dirname(__filename);
+const currentDir = process.cwd(); // current directory where user runs this CLI
 
 const cli = meow(
   `
@@ -44,19 +46,25 @@ const cli = meow(
 console.log(`Version: ${packageJson.version}`);
 
 // init ChatGPTAPI
+const gptFlag = cli.flags.gpt || cli.flags.gpt3 || cli.flags.gpt4 || '';
 let chatgpt;
 import { ChatGPTAPI } from 'chatgpt';
-if (process.env.OPENAI_API_KEY) {
-  const model = cli.flags.gpt4 ? 'gpt-4' : 'gpt-3.5-turbo'; // default: gpt-3.5-turbo
-  console.log('ChatGPT model:', model);
-  chatgpt = new ChatGPTAPI({
-    apiKey: process.env.OPENAI_API_KEY,
-    completionParams: {
-      model
-      // temperature: 0.5,
-      // top_p: 0.8
-    }
-  });
+if (gptFlag) {
+  if (process.env.OPENAI_API_KEY) {
+    const model = cli.flags.gpt4 ? 'gpt-4' : 'gpt-3.5-turbo'; // default: gpt-3.5-turbo
+    console.log('ChatGPT model:', model);
+    chatgpt = new ChatGPTAPI({
+      apiKey: process.env.OPENAI_API_KEY,
+      completionParams: {
+        model
+        // temperature: 0.5,
+        // top_p: 0.8
+      }
+    });
+  } else {
+    console.log('Error: OPENAI_API_KEY environment variable not found!');
+    process.exit(1);
+  }
 }
 
 function extractPath(str) {
@@ -239,7 +247,6 @@ async function init() {
 
 (async () => {
   const addon = cli.flags.addon || cli.flags.add || '';
-  const gptFlag = cli.flags.gpt || cli.flags.gpt3 || cli.flags.gpt4 || '';
   if (addon) {
     // console.log('cli.flags', cli.flags.addon);
     // console.log('__dirname', __dirname);
@@ -248,7 +255,7 @@ async function init() {
     return;
   }
   if (gptFlag) {
-    const data = readFileSync(`${__dirname}/${gptFlag}/prompt`, { encoding: 'utf8', flag: 'r' });
+    const data = readFileSync(`${currentDir}/${gptFlag}/prompt`, { encoding: 'utf8', flag: 'r' });
     if (chatgpt) {
       await callChatGPT(`${__dirname}/${gptFlag}/`, data);
     }

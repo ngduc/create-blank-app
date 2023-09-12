@@ -1,6 +1,6 @@
 {
   "name": "create-blank-app",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "create-blank-app command-line tool to create new project from boilerplate.",
   "license": "MIT",
   "repository": "https://github.com/ngduc/create-blank-app",
