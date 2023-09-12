@@ -257,7 +257,7 @@ async function init() {
   if (gptFlag) {
     const data = readFileSync(`${currentDir}/${gptFlag}/prompt`, { encoding: 'utf8', flag: 'r' });
     if (chatgpt) {
-      await callChatGPT(`${__dirname}/${gptFlag}/`, data);
+      await callChatGPT(`${currentDir}/${gptFlag}/`, data);
     }
     return;
   }
