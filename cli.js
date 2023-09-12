@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import meow from 'meow';
 import { match } from './utils.js';
-import { existsSync, mkdirSync, readdirSync, writeFileSync, statSync, copyFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, statSync, copyFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
@@ -13,6 +13,160 @@ const packageJson = require('./package.json');
 const path = require('path');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const cli = meow(
+  `
+	Usage
+	  $ create-blank-app <name> <search keywords>
+
+	Options
+	  --addon  <addon-name>  run an addon script (ex: npx cba --addon tailwind-3)
+    --add    <addon-name>  same as --addon
+    --gpt    <project-dir> use ChatGPT 3 to create the new app from prompt (project-dir/prompt)
+    --gpt4   <project-dir> use ChatGPT 4 to create the new app from prompt (project-dir/prompt)
+
+	Examples
+	  $ create-blank-app myapp vite react ts
+`,
+  {
+    flags: {
+      addon: {
+        type: 'string',
+        default: ''
+      },
+      ai: {
+        type: 'string',
+        default: ''
+      }
+    }
+  }
+);
+console.log(`Version: ${packageJson.version}`);
+
+// init ChatGPTAPI
+let chatgpt;
+import { ChatGPTAPI } from 'chatgpt';
+if (process.env.OPENAI_API_KEY) {
+  const model = cli.flags.gpt4 ? 'gpt-4' : 'gpt-3.5-turbo'; // default: gpt-3.5-turbo
+  console.log('ChatGPT model:', model);
+  chatgpt = new ChatGPTAPI({
+    apiKey: process.env.OPENAI_API_KEY,
+    completionParams: {
+      model
+      // temperature: 0.5,
+      // top_p: 0.8
+    }
+  });
+}
+
+function extractPath(str) {
+  let retStr = str.trim();
+  retStr = retStr.replace('File:', '');
+  retStr = retStr.replace('File path:', '');
+
+  retStr = retStr.endsWith(':') ? retStr.slice(0, -1) : retStr; // remove the last ':' (if any)
+
+  const pattern = /[\#\:\"\*\?\<\>\|\`\[\]\(\)\{\}]+/g;
+  retStr = retStr.replace(pattern, '').trim();
+
+  const matches = retStr.match(/(?:\d+\.\s)?(.*)/);
+  retStr = matches ? matches[1] : retStr; // e.g. "1. filename.ext" => remove "1. "
+
+  if (str.includes(' ')) {
+    retStr = str.split(' ').splice(1).join(' '); // ignore the first part
+  }
+  retStr = retStr.replace(/\*\*/g, '');
+  // const match = str.match(/(?:\d+\.\s)?(.*)/);
+  // return match ? match[1] : '';
+  return retStr;
+}
+
+function parseAndCreateFiles(basePath, inputString) {
+  const lines = inputString.split('\n');
+  let isContent = false;
+  let content = '';
+  let filePath = '';
+
+  for (let line of lines) {
+    if (!isContent) {
+      if (line.trim() === '') {
+        continue; // skip empty lines (not within a codeblock)
+      }
+    }
+
+    if (line.startsWith('```')) {
+      if (isContent) {
+        // If we're in a content block, write the file
+        const fileWithPath = extractPath(filePath); // e.g. line content: "5. path/file.ext:"
+        console.log('File:', fileWithPath);
+        // This is the end of the code block
+        // Write the code to the file
+        let dir = path.dirname(fileWithPath);
+        dir = dir === '.' ? basePath : basePath + dir;
+
+        if (!existsSync(dir)) {
+          mkdirSync(dir, { recursive: true });
+        }
+        writeFileSync(basePath + fileWithPath, content);
+        content = '';
+        filePath = '';
+      }
+      isContent = !isContent;
+    } else if (isContent) {
+      // If we're in a content block, add the line to the content
+      content += line + '\n';
+    } else {
+      // If it's not a content block, it's a file path
+      filePath = line;
+    }
+  }
+}
+
+async function callChatGPT(basePath, prompt) {
+  console.log('Prompt:', prompt);
+  let text = `Create a project with the following prompt, with working code only without any proses, each file's codeblock has file path and filename before it. Prompt: ${prompt}`;
+  let responseText = '';
+  let res;
+  let isEOF = false;
+  let counter = 0;
+  do {
+    counter++;
+    res = await chatgpt.sendMessage(text, {});
+    responseText += res.text;
+    text = 'continue';
+    console.log('res.text', res.text);
+    isEOF = res?.text?.trim().endsWith('`') || res?.text?.trim().endsWith('.') || counter >= 5;
+  } while (!isEOF);
+
+  // console.log('res.text', res.text);
+
+  writeFileSync(basePath + 'prompt.response', responseText);
+  parseAndCreateFiles(basePath, responseText);
+
+  /*
+  parseAndCreateFiles(
+    basePath,
+    `
+Some text
+temp/file1.txt:
+\`\`\`
+  file1 content
+\`\`\`
+More text
+**temp/file2.txt**
+\`\`\`
+  file2 content
+\`\`\`
+
+3. **file3.txt**
+\`\`\`
+  file3 content
+\`\`\`
+other text
+    `
+  );
+*/
+}
 
 // const renameFiles = {
 //   _gitignore: '.gitignore',
@@ -36,30 +190,6 @@ function copyDir(srcDir, destDir) {
     copy(srcFile, destFile);
   }
 }
-
-const cli = meow(
-  `
-	Usage
-	  $ create-blank-app <name> <search keywords>
-
-	Options
-	  --addon  <addon-name>  run an addon script (ex: npx cba --addon tailwind-3)
-    --add    <addon-name>  same as --addon
-
-	Examples
-	  $ create-blank-app myapp vite react ts
-`,
-  {
-    flags: {
-      addon: {
-        type: 'string',
-        default: ''
-      }
-    }
-  }
-);
-
-console.log(`Version: ${packageJson.version}`);
 
 async function init() {
   const [appName, ...searchKeys] = cli.input;
@@ -109,11 +239,19 @@ async function init() {
 
 (async () => {
   const addon = cli.flags.addon || cli.flags.add || '';
+  const gptFlag = cli.flags.gpt || cli.flags.gpt3 || cli.flags.gpt4 || '';
   if (addon) {
     // console.log('cli.flags', cli.flags.addon);
     // console.log('__dirname', __dirname);
     const addonStdout = execSync(`sh ${__dirname}/addons/${addon}/run.sh`);
     console.log(addonStdout.toString());
+    return;
+  }
+  if (gptFlag) {
+    const data = readFileSync(`${__dirname}/${gptFlag}/prompt`, { encoding: 'utf8', flag: 'r' });
+    if (chatgpt) {
+      await callChatGPT(`${__dirname}/${gptFlag}/`, data);
+    }
     return;
   }
 
