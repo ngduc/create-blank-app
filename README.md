@@ -6,7 +6,7 @@ Support:
 - Angular, create-react-app (CRA), create-next-app (CNA), create-web3js-app (CWA), express-generator-typescript, create-react-native-app (Expo), react-native init.
 - Vite: vue, react, preact, lit-element, svelte app.
 - Typescript.
-- Addons: install tailwind-3, etc.
+- Addons: install and configure libraries into existing project (see more below).
 
 ```
 Installation:   $ npm install create-blank-app -g
