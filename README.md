@@ -3,7 +3,7 @@
 `create-blank-app (cba)` - just one command to remember. CBA is a command-line tool for creating a new app by searching for tech stacks using keywords. It also supports generative AI.
 
 Support:
-- Vite, bun, next, create-react-app (CRA), create-next-app (CNA), create-web3js-app (CWA), express-generator-typescript, create-react-native-app (Expo), react-native init, angular.
+- Vite, bun, next, create-react-app (CRA), create-next-app (CNA), create-nuxt-app, create-web3js-app (CWA), express-generator-typescript, create-react-native-app (Expo), react-native init, angular.
 - Vite: vue, react, preact, lit-element, svelte app.
 - Typescript.
 - Support ChatGPT to generate a new app using prompt file.

@@ -6,12 +6,14 @@ const clc = require('cli-color');
 const synonymMap = {
   angular: ['angularjs', 'ng'],
   'create-next-app': ['next', 'nextjs', 'cna'],
+  'create-nuxt-app': ['nuxt', 'nuxtjs'],
   'create-react-app': ['createreactapp', 'cra'],
   'create-react-native-app': ['crna', 'react-native', 'rn', 'native'],
   'create-expo-app': ['expo', 'ts'],
   'react-native': ['reactnative', 'rn', 'native'],
   'create-web3js-app': ['cwa'],
   'express-generator-typescript': ['express', 'expressjs'],
+  nuxt: ['nuxtjs'],
   mobile: ['phone', 'android', 'ios'],
   vite: ['vitejs'],
   bun: ['bunjs'],
@@ -27,6 +29,8 @@ const CMD_ANGULAR = `npx -p @angular/cli@latest ng new $name`;
 const CMD_ANGULAR_COLOR = `npx -p ${clc.yellow('angular')}/cli@latest ng new $name`;
 const CMD_NEXT = 'npx create-next-app $name --use-npm';
 const CMD_NEXT_COLOR = `npx ${clc.yellow('create-next-app')} $name --use-npm`;
+const CMD_NUXT = 'npx create-nuxt-app $name';
+const CMD_NUXT_COLOR = `npx ${clc.yellow('create-nuxt-app')} $name`;
 const CMD_CRA = 'npx create-react-app $name';
 const CMD_CRA_COLOR = `npx ${clc.yellow('create-react-app')} $name`;
 const CMD_CWA = 'npx create-web3js-app $name';
@@ -50,6 +54,8 @@ const CMD_EXPO = `npx create-expo-app $name`;
 const CMD_EXPO_COLOR = `npx ${clc.yellow('create-expo-app')} $name`;
 const CMD_EXPO_TS = `npx create-expo-app $name -t expo-template-blank-typescript`;
 const CMD_EXPO_TS_COLOR = `npx ${clc.yellow('create-expo-app')} $name -t expo-template-blank-typescript`;
+
+// keywords are prioritized for matching, also are the 'keys' of 'synonymMap'.
 const commandArr = [
   {
     command: `${CMD_ANGULAR}`,
@@ -65,6 +71,11 @@ const commandArr = [
     command: `${CMD_NEXT} --ts`,
     colorCommand: `${CMD_NEXT_COLOR} --ts`,
     keywords: ['create-next-app', 'react', 'typescript']
+  },
+  {
+    command: `${CMD_NUXT}`,
+    colorCommand: `${CMD_NUXT_COLOR}`,
+    keywords: ['create-nuxt-app', 'vue']
   },
   {
     command: `${CMD_CRA}`,

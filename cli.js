@@ -290,9 +290,11 @@ async function init() {
       choices
     }
   ]);
-  console.log('Command:', response.command);
 
-  return require('child_process').execSync(response.command, { stdio: 'inherit' });
+  if (response.command) {
+    console.log('Command:', response.command);
+    return require('child_process').execSync(response.command, { stdio: 'inherit' });
+  }
   // => { twitter: 'terkelg', color: [ '#ff0000', '#0000ff' ] }
 
   // init().catch((e) => {
