@@ -20,7 +20,7 @@ Examples:
     $ cba madebyai (assume that you have 'madebyai/prompt' file)
 ```
 
-<img src="docs/create-blank-app.gif">
+<img src="docs/create-blank-app2.gif">
 
 ### Addons:
 
