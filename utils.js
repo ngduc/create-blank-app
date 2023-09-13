@@ -14,6 +14,7 @@ const synonymMap = {
   'express-generator-typescript': ['express', 'expressjs'],
   mobile: ['phone', 'android', 'ios'],
   vite: ['vitejs'],
+  bun: ['bunjs'],
   preact: ['preactjs'],
   lit: ['lit-element', 'litjs'],
   react: ['reactjs'],
@@ -32,6 +33,11 @@ const CMD_CWA = 'npx create-web3js-app $name';
 const CMD_CWA_COLOR = `npx ${clc.yellow('create-web3js-app')} $name`;
 const CMD_VITE = 'npm init vite@latest $name -- --template';
 const CMD_VITE_COLOR = `npm init ${clc.yellow('vite')}@latest $name -- --template`;
+// using bunx for now as 'bun' has errors on macos: https://github.com/oven-sh/bun/issues/4646#issuecomment-1713732417
+const CMD_BUN_NEXT = 'bunx create-t3-app@latest $name';
+const CMD_BUN_NEXT_COLOR = `npx ${clc.yellow('bunx')} create-t3-app@latest $name`;
+const CMD_BUN_VITE = 'bunx create-vite@latest $name';
+const CMD_BUN_VITE_COLOR = `${clc.yellow('bunx')} create-vite@latest $name`;
 const CMD_EXPRESS = `npx express-generator-typescript $name`;
 const CMD_EXPRESS_COLOR = `npx ${clc.yellow('express-generator-typescript')} $name`;
 const CMD_RN = `npx react-native init $name`;
@@ -129,6 +135,16 @@ const commandArr = [
     command: `${CMD_VITE} vue-ts`,
     colorCommand: `${CMD_VITE_COLOR} vue-ts`,
     keywords: ['vite', 'vue', 'typescript']
+  },
+  {
+    command: `${CMD_BUN_VITE}`,
+    colorCommand: `${CMD_BUN_VITE_COLOR}`,
+    keywords: ['bun', 'vite', 'react']
+  },
+  {
+    command: `${CMD_BUN_NEXT}`,
+    colorCommand: `${CMD_BUN_NEXT_COLOR}`,
+    keywords: ['bun', 'next']
   },
   {
     command: `${CMD_CWA}`,
