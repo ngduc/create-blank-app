@@ -18,15 +18,18 @@ model Post {
   published Boolean @default(false)
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@map(name: "posts")
 }
 
 model User {
   id            String       @default(cuid()) @id
   name          String?
   email         String?   @unique
+  posts         Post[]
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  posts         Post[]
   @@map(name: "users")
 }
 EOL
