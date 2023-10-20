@@ -18,8 +18,10 @@ model Post {
   published Boolean @default(false)
   author    User?   @relation(fields: [authorId], references: [id])
   authorId  String?
+
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@index([createdAt])
   @@map(name: "posts")
 }
 
@@ -28,16 +30,18 @@ model User {
   name          String?
   email         String?   @unique
   posts         Post[]
+
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  @@index([createdAt])
   @@map(name: "users")
 }
 EOL
 
 npx prisma db push
 
-# STEP 3 - add a route example /users: src/prismaRoutes.ts
-FILE1="src/prismaRoutes.ts"
+# STEP 3 - add a route example /users: src/routePrisma.ts
+FILE1="src/routePrisma.ts"
 echo $FILE1
 [ -f $FILE1 ] && echo \> file existed: overriding.
 cat > $FILE1 <<EOL
@@ -46,7 +50,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// import this file and use it: app.use('/', prismaRoutes);
+// import this file and use it: app.use('/', routePrisma);
 const router = express.Router();
 
 router.get('/users', async (req: Request, res: Response) => {

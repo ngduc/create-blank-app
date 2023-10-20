@@ -37,6 +37,7 @@ $ cba --add tailwind
   - `tailwind`
   - `react-router`
   - `prisma`: for backend: added prisma, @prisma/client and examples of tables, /users route.
+  - `google-oauth-express-react`: for express backend and react webapp.
 
 ### ChatGPT:
 
