@@ -1,5 +1,5 @@
 #!/bin/bash
-echo --- install Google OAuth to an existing Backend project.
+echo --- install Google OAuth to an existing Backend Express project.
 
 # STEP 1 - install Prisma and init (generate .env and other files)
 npm install google-auth-library jsonwebtoken --save-dev
@@ -14,6 +14,7 @@ import express from 'express';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
+// in the main server file, import this file to use it: app.use('/', routeAuth);
 const router = express.Router();
 
 const oAuth2Client = new OAuth2Client(
@@ -51,7 +52,7 @@ router.post('/api/auth/google', async (req, res) => {
 
     res.json({ tokens, jwtToken, userInfo });
   } catch (e) {
-    res.json({ error: '/api/auth/google failed' });
+    res.json({ error: 'FAILED /api/auth/google' });
   }
 });
 
@@ -59,7 +60,7 @@ router.get('/api/auth/userinfo', async (req, res) => {
   // this decodes 'Bearer jwtToken' to get userinfo without DB/Network requests.
   const user = (await getJwtUser(req, res)) as any;
   if (!user) {
-    return res.status(404).json({ error: 'Failed to get user info' });
+    return res.status(404).json({ error: 'FAILED to get user info' });
   }
   return res.status(200).json({ user });
 });
@@ -94,7 +95,6 @@ const ProtectedPage = (props: any) => {
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ code }) => {
       const { data: tokensData } = await axios.post('/api/auth/google', {
-        // http://localhost:3001/auth/google backend that will exchange the code
         code
       });
       console.log('tokensData', tokensData);
@@ -114,7 +114,6 @@ const ProtectedPage = (props: any) => {
     },
     flow: 'auth-code'
   });
-  console.log('user', user);
 
   return jwtToken ? (
     props.children

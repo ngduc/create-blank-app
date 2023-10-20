@@ -50,24 +50,26 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// import this file and use it: app.use('/', routePrisma);
+// in the main server file, import this file to use it: app.use('/', routePrisma);
 const router = express.Router();
 
 router.get('/users', async (req: Request, res: Response) => {
-  // example: create a new user:
-  const newUser = await prisma.user.create({
-    data: {
-      name: 'New User ' + Math.random(),
-      email: 'email-' + Math.random() + '@example.com'
-    }
-  });
-  console.log('New user created: ', newUser);
+  try {
+    // example: create a new user:
+    const newUser = await prisma.user.create({
+      data: {
+        name: 'New User ' + Math.random(),
+        email: 'email-' + Math.random() + '@example.com'
+      }
+    });
 
-  // example: find all users:
-  const allUsers = await prisma.user.findMany({});
-  console.log('All users: ', allUsers?.length);
-
-  res.send(allUsers);
+    // example: find all users:
+    const allUsers = await prisma.user.findMany({});
+    res.send(allUsers);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: 'Failed to fetch users' });
+  }
 });
 
 export default router;
